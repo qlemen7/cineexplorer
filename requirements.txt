@@ -1,0 +1,16 @@
+# Framework Web (Phase 4)
+Django>=4.2,<6.0
+
+# Base de données NoSQL (Phase 2 & 3)
+pymongo>=4.3
+
+# Analyse de données et Exploration (Phase 1)
+pandas>=2.0
+numpy>=1.24
+
+# Visualisation (Phase 1)
+matplotlib>=3.7
+
+# Environnement de développement (Notebooks)
+jupyter>=1.0
+notebook>=6.5

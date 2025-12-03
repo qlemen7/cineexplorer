@@ -1,0 +1,14 @@
+# Python & Environnement
+__pycache__/
+*.pyc
+.venv/
+.env
+.DS_Store
+
+# Données Volumineuses (IMPORTANT)
+data/csv/
+data/imdb.db
+data/mongo/
+
+# Fichiers temporaires VS Code
+.vscode/
