@@ -2,7 +2,7 @@ import sqlite3
 import os
 
 # Chemin relatif vers la DB
-DB_PATH = os.path.join(os.path.dirname(__file__), '../../data/imdb.db')
+DB_PATH = os.path.join(os.path.dirname(__file__), 'data', 'cineexplorer.db')
 
 def create_schema():
     # Suppression de l'ancienne base pour repartir à propre
