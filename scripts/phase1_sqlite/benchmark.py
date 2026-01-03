@@ -3,7 +3,6 @@ import time
 import os
 import sys
 
-# Ajout du chemin pour importer queries.py correctement
 sys.path.append(os.path.dirname(__file__))
 from queries import *
 
@@ -51,7 +50,7 @@ def create_indexes(conn):
     print(f"Fait en {time.time()-start:.2f}s.")
 
 def drop_indexes(conn):
-    print("   🗑️  Suppression des index...", end=' ', flush=True)
+    print("  Suppression des index...", end=' ', flush=True)
     # Liste exhaustive pour être sûr de bien comparer "Sans rien" vs "Optimisé"
     indexes = [
         'idx_persons_name', 'idx_genres_genre', 'idx_movies_year',
@@ -91,7 +90,7 @@ def run_benchmark():
     # 1. Mesure Sans Index
     drop_indexes(conn)
     results = {}
-    print("\n⏱️  Mesure SANS index (Patience...) :")
+    print("\nMesure SANS index (Patience...) :")
     for name, func in tests:
         start = time.time()
         func()
@@ -100,7 +99,7 @@ def run_benchmark():
         print(f"   - {name:<15} : {duration:.2f} ms")
 
     # 2. Mesure Avec Index
-    print("\n⏱️  Mesure AVEC index :")
+    print("\nMesure AVEC index :")
     create_indexes(conn)
     for name, func in tests:
         start = time.time()
@@ -117,7 +116,7 @@ def run_benchmark():
         results[name]["gain"] = gain
         print(f"   - {name:<15} : {duration:.2f} ms (Gain: {gain:.1f}%)")
 
-    # 3. Tableau Markdown pour le rapport
+    # 3. Tableau résumé
     print("\n\n--- TABLEAU POUR RAPPORT LATEX/MARKDOWN ---")
     print(f"{'Requête':<20} | {'Sans Index (ms)':<15} | {'Avec Index (ms)':<15} | {'Gain (%)':<10}")
     print("-" * 66)

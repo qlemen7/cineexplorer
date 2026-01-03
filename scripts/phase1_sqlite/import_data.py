@@ -29,7 +29,6 @@ def clean_val(val):
 def import_data():
     if os.path.exists(DB_PATH): os.remove(DB_PATH)
     
-    # On recrée le schéma vide
     from create_schema import create_schema
     create_schema()
 
@@ -38,13 +37,13 @@ def import_data():
     conn.execute("PRAGMA journal_mode = MEMORY")
     conn.execute("PRAGMA foreign_keys = OFF") 
 
-    print(f"\n--- DÉBUT DE L'IMPORT (Corrigé Le C) ---")
+    print(f"\n--- DÉBUT DE L'IMPORT ---")
     total_start = time.time()
 
     for filename, table, cols in FILES_CONFIG:
         path = os.path.join(CSV_DIR, filename)
         if not os.path.exists(path):
-            print(f"⚠️  Fichier {filename} manquant.")
+            print(f"Fichier {filename} manquant.")
             continue
 
         print(f"Importation de {table}...", end=' ', flush=True)
@@ -60,11 +59,7 @@ def import_data():
             next(reader, None) # Skip header
 
             # --- LOGIQUE DE MAPPING EXPLICITE ---
-            # C'est ici qu'on répare le bug de PRINCIPALS
             if table == 'principals':
-                # CSV : mid, ordering, pid, category, job
-                # SQL : movie_id, person_id, ordering, category, job
-                # On croise ordering et person_id dans l'ordre SQL
                 insert_sql = "INSERT INTO principals (movie_id, ordering, person_id, category, job) VALUES (?, ?, ?, ?, ?)"
             
             elif table == 'characters':
@@ -89,12 +84,11 @@ def import_data():
             
             if batch: conn.executemany(insert_sql, batch)
 
-        print(f"✅ ({time.time() - start_t:.2f}s)")
+        print(f"({time.time() - start_t:.2f}s)")
 
     conn.execute("PRAGMA foreign_keys = ON")
     conn.commit()
     conn.close()
-    print(f"\n🎉 Import terminé. Tom Hanks devrait être là.")
 
 if __name__ == "__main__":
     import_data()

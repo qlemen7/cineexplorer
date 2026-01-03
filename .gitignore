@@ -4,11 +4,19 @@ __pycache__/
 .venv/
 .env
 .DS_Store
+db.sqlite3
+*.sqlite3
 
 # Données Volumineuses (IMPORTANT)
 data/csv/
 data/imdb.db
 data/mongo/
+data/cineexplorer.db
+data/cineexplorer_fake.db
+data/*.tsv
+data/*.gz
+data/*.zip
 
 # Fichiers temporaires VS Code
 .vscode/
+.DS_Store

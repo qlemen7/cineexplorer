@@ -1,0 +1,119 @@
+{% extends 'movies/base.html' %}
+
+{% block title %}{{ movie.title }} - Détails{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+
+
+    <div class="container mt-4">
+    
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'home' %}" class="text-decoration-none">Accueil</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'movie_list' %}" class="text-decoration-none">Catalogue</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ movie.title }}</li>
+        </ol>
+    </nav>
+
+
+
+
+    <div class="row mb-5">
+        <div class="col-md-8">
+            <h1 class="display-4 fw-bold">{{ movie.title }}</h1>
+            <p class="text-muted fs-4">
+                {{ movie.year }} • {{ movie.genres|join:", " }} • {{ movie.runtime }} min
+            </p>
+            
+            <div class="d-flex align-items-center mb-4">
+                <span class="badge bg-warning text-dark fs-5 me-3">
+                    <i class="fas fa-star"></i> {{ movie.rating.average|default:"N/A" }} 
+                    <small class="fs-6">({{ movie.rating.votes }} votes)</small>
+                </span>
+                {% if movie.is_adult %}
+                <span class="badge bg-danger">18+</span>
+                {% endif %}
+            </div>
+
+            {% if movie.titles %}
+            <div class="card mb-4 shadow-sm">
+                <div class="card-header bg-light fw-bold">🌍 Titres Alternatifs</div>
+                <ul class="list-group list-group-flush">
+                    {% for t in movie.titles %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        {{ t.title }}
+                        <span class="badge bg-secondary">{{ t.region }}</span>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4">
+            <h3 class="border-bottom pb-2">🎬 Réalisation</h3>
+            <ul class="list-unstyled mt-3">
+                {% for director in movie.directors %}
+                <li class="mb-2"><strong>{{ director.name }}</strong></li>
+                {% empty %}
+                <li class="text-muted">Inconnu</li>
+                {% endfor %}
+            </ul>
+
+            <h3 class="border-bottom pb-2 mt-4">✍️ Scénario</h3>
+            <ul class="list-unstyled mt-3">
+                {% for writer in movie.writers %}
+                <li class="mb-2">{{ writer.name }}</li>
+                {% empty %}
+                <li class="text-muted">Inconnu</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div class="col-md-8">
+            <h3 class="border-bottom pb-2">🎭 Casting Principal</h3>
+            <div class="row row-cols-1 row-cols-md-2 g-3 mt-2">
+                {% for actor in movie.cast|slice:":6" %} <div class="col">
+                    <div class="d-flex align-items-center border p-2 rounded">
+                        <div class="avatar bg-secondary text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px;">
+                            {{ actor.name|first }}
+                        </div>
+                        <div>
+                            <h6 class="mb-0">{{ actor.name }}</h6>
+                            <small class="text-muted">Acteur/Actrice</small>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <p>Aucun acteur listé.</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    {% if similar_movies %}
+    <div class="mt-5">
+        <h3 class="mb-4"><i class="fas fa-film text-primary"></i> Vous aimerez aussi</h3>
+        <div class="row row-cols-2 row-cols-md-6 g-3">
+            {% for sim in similar_movies %}
+            <div class="col">
+                <div class="card h-100 shadow-sm border-0">
+                    <div class="card-body p-2">
+                        <h6 class="card-title text-truncate small mb-1">
+                            <a href="{% url 'movie_detail' sim.id %}" class="text-decoration-none text-dark stretched-link">
+                                {{ sim.title }}
+                            </a>
+                        </h6>
+                        <span class="badge bg-light text-dark border">{{ sim.year }}</span>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -11,7 +11,7 @@ def create_schema():
         
     conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
-    c.execute("PRAGMA foreign_keys = ON;") # Intégrité référentielle [cite: 146]
+    c.execute("PRAGMA foreign_keys = ON;") # Intégrité référentielle
 
     print("Création des tables...")
 

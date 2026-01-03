@@ -1,0 +1,20 @@
+{% extends 'movies/base.html' %}
+
+{% block title %}Introuvable - CinéExplorer{% endblock %}
+
+{% block content %}
+<div class="container text-center py-5">
+    <div class="display-1 text-muted"><i class="fas fa-search"></i></div>
+    <h1 class="display-4 mt-3">Film Introuvable</h1>
+    <p class="lead text-muted">{{ message|default:"Ce film n'est pas encore dans la base MongoDB." }}</p>
+    
+    <div class="alert alert-warning d-inline-block mt-3">
+        <i class="fas fa-exclamation-triangle"></i> 
+        Astuce : Avez-vous pensé à migrer <strong>tout</strong> le catalogue SQLite vers MongoDB ?
+    </div>
+
+    <div class="mt-5">
+        <a href="{% url 'movie_list' %}" class="btn btn-primary btn-lg">Retour au catalogue</a>
+    </div>
+</div>
+{% endblock %}

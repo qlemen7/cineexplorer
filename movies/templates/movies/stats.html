@@ -1,0 +1,144 @@
+{% extends 'movies/base.html' %}
+
+{% block title %}Statistiques - CinéExplorer{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <h1 class="mb-4">📊 Tableau de Bord</h1>
+
+    <div class="row g-4 mb-5">
+        <div class="col-md-6">
+            <div class="card bg-primary text-white h-100">
+                <div class="card-body text-center">
+                    <h3>SQLite (Relationnel)</h3>
+                    <div class="display-4 fw-bold">{{ sqlite.count_movies }}</div>
+                    <p>Films indexés</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card bg-success text-white h-100">
+                <div class="card-body text-center">
+                    <h3>MongoDB (Replica Set)</h3>
+                    <div class="display-4 fw-bold">{{ mongo.count }}</div>
+                    <p>Documents synchronisés</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-md-6">
+            <div class="card shadow-sm h-100">
+                <div class="card-header">Répartition par Genre (Top 10)</div>
+                <div class="card-body">
+                    <canvas id="genresChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card shadow-sm h-100">
+                <div class="card-header">Films par Décennie</div>
+                <div class="card-body">
+                    <canvas id="decadesChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-header">Distribution des Notes IMDb</div>
+                <div class="card-body">
+                    <canvas id="ratingsChart" style="max-height: 300px;"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card shadow-sm h-100">
+                <div class="card-header bg-dark text-white">🏆 Top 10 Acteurs Prolifiques</div>
+                <div class="card-body">
+                    <canvas id="actorsChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Récupération des données passées par Django
+    const genresData = JSON.parse('{{ genres_data|safe }}');
+    const decadesData = JSON.parse('{{ decades_data|safe }}');
+    const ratingsData = JSON.parse('{{ ratings_data|safe }}');
+
+    // 1. Graphique Genres (Bar)
+    new Chart(document.getElementById('genresChart'), {
+        type: 'bar',
+        data: {
+            labels: Object.keys(genresData),
+            datasets: [{
+                label: 'Nombre de films',
+                data: Object.values(genresData),
+                backgroundColor: 'rgba(54, 162, 235, 0.6)'
+            }]
+        }
+    });
+
+    // 2. Graphique Décennies (Line)
+    new Chart(document.getElementById('decadesChart'), {
+        type: 'line',
+        data: {
+            labels: Object.keys(decadesData),
+            datasets: [{
+                label: 'Evolution de la production',
+                data: Object.values(decadesData),
+                borderColor: 'rgba(75, 192, 192, 1)',
+                tension: 0.3,
+                fill: true
+            }]
+        }
+    });
+
+    // 3. Graphique Notes (Bar)
+    new Chart(document.getElementById('ratingsChart'), {
+        type: 'bar',
+        data: {
+            labels: Object.keys(ratingsData),
+            datasets: [{
+                label: 'Distribution des notes',
+                data: Object.values(ratingsData),
+                backgroundColor: 'rgba(255, 206, 86, 0.6)'
+            }]
+        }
+    });
+
+    // ... (Tes anciens graphiques sont ici)
+
+    // Récupération des données Acteurs
+    const actorsData = JSON.parse('{{ actors_data|safe }}');
+
+    // 4. Graphique Acteurs (Barre Horizontale)
+    new Chart(document.getElementById('actorsChart'), {
+        type: 'bar',
+        data: {
+            labels: Object.keys(actorsData),
+            datasets: [{
+                label: 'Nombre de films',
+                data: Object.values(actorsData),
+                backgroundColor: 'rgba(255, 99, 132, 0.6)', 
+                borderColor: 'rgba(255, 99, 132, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            indexAxis: 'y',
+            scales: {
+                x: { beginAtZero: true }
+            }
+        }
+    });
+</script>
+{% endblock %}
